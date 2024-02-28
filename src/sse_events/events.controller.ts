@@ -1,8 +1,8 @@
 import { Controller, Sse } from '@nestjs/common';
-import { EventService } from '../service/eventService';
+import { EventService } from './eventService';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { sseInterface } from '../service/sseInterface';
+import { sseInterface } from './interface/sseInterface';
 
 @Controller('events')
 export class EventsController {
