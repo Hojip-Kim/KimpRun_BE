@@ -7,6 +7,8 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // entity decorator에 없는 프로퍼티값은 거름
@@ -15,6 +17,6 @@ async function bootstrap() {
     })
   )
 
-  await app.listen(3000);
+  await app.listen(3000, "0.0.0.0"); // 임시로 모든곳에서 listen
 }
 bootstrap();
