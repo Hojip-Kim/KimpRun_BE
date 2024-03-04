@@ -1,6 +1,7 @@
 import { TimeStamp } from 'src/common/entity/timestamp';
 import { BoardsEntity } from 'src/community/boards/boards/boards.entity';
-import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, OneToMany} from 'typeorm'
+import { Profile } from 'src/profile/entity/profile';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, OneToMany, OneToOne, JoinColumn} from 'typeorm'
 
 export enum RoleEnumType {
     USER = 'user',
@@ -9,7 +10,7 @@ export enum RoleEnumType {
 
 @Entity({ name: 'user' })
 @Unique(['user_email'])
-export class UserEntity extends TimeStamp {
+export class User extends TimeStamp {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -20,17 +21,24 @@ export class UserEntity extends TimeStamp {
     @Column()
     user_email: string;
 
-    @Column()
-    pwd: string;
+    // TODO : 수동회원가입 시 pwd 구현 - bcrypt
+    // @Column()
+    // pwd: string;
 
     //google 로그인
     @Column()
-    provider: string;
+    providerId: string;
 
     @Column()
+    provider: string;
+
+    // oauth token 저장 - google
+    @Column()
     oauth_token: string;
+
     //TODO1 : CASCADE 구현 - profile, auth => soft delete, create cascading
 
+    // user role
     @Column({
         type: 'enum',
         enum: RoleEnumType,
@@ -39,7 +47,13 @@ export class UserEntity extends TimeStamp {
     role: RoleEnumType.USER;
 
     @OneToMany(() => BoardsEntity, (board) => board.user) // One to Many with boards
-    Boards: BoardsEntity[];
+    @JoinColumn()
+    boards: BoardsEntity[];
+
+    //Todo : Cascade(create, save)
+    @OneToOne(() => Profile, (profile) => profile.user, {cascade: true}) // One to One with Profile
+    @JoinColumn()
+    profile: Profile;
 
     // TODO2 : deletedAt 구현 => cascade로 softdelete구현
     // @Column()
