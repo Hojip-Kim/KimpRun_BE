@@ -12,23 +12,29 @@ import { EventService } from './sse_events/eventService';
 import { BinanceService } from './websocket/BinanceService';
 import { UpbitService } from './websocket/upbitService';
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
     UserModule, 
     AuthModule,
-    TypeOrmModule.forRoot({
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService : ConfigService) => ({
       type: 'postgres',
-      host: process.env.TYPEORM_HOST,
-      port: Number(process.env.TYPEORM_PORT),
-      username: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE,
+      host: configService.get('TYPEORM_HOST'),
+      port: +configService.get('TYPEORM_PORT'),
+      username: configService.get('TYPEORM_USERNAME'),
+      password: configService.get('TYPEORM_PASSWORD'),
+      database: configService.get('TYPEORM_DATABASE'),
       entities: [],
-      synchronize: true,
+      synchronize: configService.get('TYPEORM_SYNCHRONIZE') === 'true',
+      })
     })
   ],
-  controllers: [AppController, UserController, AuthController, EventsController],
-  providers: [AppService, UserService, AuthService, EventService, BinanceService, UpbitService],
+  // controllers: [AppController, UserController, AuthController, EventsController],
+  // providers: [AppService, UserService, AuthService, EventService, BinanceService, UpbitService],
 })
 export class AppModule {}
