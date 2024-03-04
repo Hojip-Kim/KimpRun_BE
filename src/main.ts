@@ -1,8 +1,8 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { setUpSession } from './common/session/init.session';
+import { ConfigService } from '@nestjs/config'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +16,14 @@ async function bootstrap() {
       transform: true // 컨트롤러가 값을 받을 때 컨트롤러에 정의한 타입으로 형 변환 => id로받는값에 타입을 지정한다면 nest에서 자체적으로 타입 변환
     })
   )
+  setUpSession(app);
+  
+  const configService = app.get(ConfigService);
 
-  await app.listen(3000, "0.0.0.0"); // 임시로 모든곳에서 listen
+  const port = configService.get('PORT');
+  // const whitelist = configService.get('WHITELIST'); // white list 추후 보완
+
+  await app.listen(port); // 임시로 모든곳에서 listen
+  console.log(`Server is open on port ${port}`);
 }
 bootstrap();
