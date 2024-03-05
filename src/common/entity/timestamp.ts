@@ -1,8 +1,10 @@
 import {
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    Entity
 } from 'typeorm'
 
+@Entity()
 export abstract class TimeStamp {
 
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
