@@ -13,6 +13,9 @@ import { BinanceService } from './websocket/BinanceService';
 import { UpbitService } from './websocket/upbitService';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { User } from './user/user.entity';
+import { Profile } from './profile/entity/profile';
+import { BoardsEntity } from './community/boards/boards/boards.entity';
 
 @Module({
   imports: [
@@ -29,8 +32,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       username: configService.get('TYPEORM_USERNAME'),
       password: configService.get('TYPEORM_PASSWORD'),
       database: configService.get('TYPEORM_DATABASE'),
-      entities: [],
-      synchronize: configService.get('TYPEORM_SYNCHRONIZE') === 'true',
+      entities: [User, Profile, BoardsEntity],
+      synchronize: configService.get('TYPEORM_SYNCHRONIZE'),
       })
     })
   ],
