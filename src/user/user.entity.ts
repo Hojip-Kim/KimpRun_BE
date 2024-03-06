@@ -32,10 +32,6 @@ export class User extends TimeStamp {
     @Column()
     provider: string;
 
-    // oauth token 저장 - google
-    @Column()
-    oauth_token: string;
-
     //TODO1 : CASCADE 구현 - profile, auth => soft delete, create cascading
 
     // user role
