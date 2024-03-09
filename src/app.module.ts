@@ -27,17 +27,17 @@ import { BoardsEntity } from './community/boards/boards/boards.entity';
       inject: [ConfigService],
       useFactory: (configService : ConfigService) => ({
       type: 'postgres',
-      host: configService.get('TYPEORM_HOST'),
-      port: +configService.get('TYPEORM_PORT'),
-      username: configService.get('TYPEORM_USERNAME'),
-      password: configService.get('TYPEORM_PASSWORD'),
-      database: configService.get('TYPEORM_DATABASE'),
-      entities: [User, Profile, BoardsEntity],
+      host: configService.get<string>('TYPEORM_HOST'),
+      port: configService.get<number>('TYPEORM_PORT'),
+      username: configService.get<string>('TYPEORM_USERNAME'),
+      password: configService.get<string>('TYPEORM_PASSWORD'),
+      database: configService.get<string>('TYPEORM_DATABASE'),
+      autoLoadEntities: true,
       synchronize: configService.get('TYPEORM_SYNCHRONIZE'),
       })
     })
   ],
-  // controllers: [AppController, UserController, AuthController, EventsController],
-  // providers: [AppService, UserService, AuthService, EventService, BinanceService, UpbitService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
