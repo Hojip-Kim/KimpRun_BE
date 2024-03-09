@@ -1,4 +1,4 @@
-import { TimeStamp } from 'src/common/entity/timestamp';
+import { BasicEntity } from 'src/common/entity/basicEntity';
 import { BoardsEntity } from 'src/community/boards/boards/boards.entity';
 import { Profile } from 'src/profile/entity/profile';
 import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, OneToMany, OneToOne, JoinColumn} from 'typeorm'
@@ -10,7 +10,7 @@ export enum RoleEnumType {
 
 @Entity({ name: 'user' })
 @Unique(['user_email'])
-export class User extends TimeStamp {
+export class User extends BasicEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
