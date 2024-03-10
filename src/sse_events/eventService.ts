@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
 
 @Injectable()
-export class EventService {
+export abstract class EventService {
   private dataSubject = new Subject<any>();
 
-  sendData(data: any) {
-    this.dataSubject.next(data);
+  async sendData(data: any) {
+    await this.dataSubject.next(data);
   }
 
   getData() {
