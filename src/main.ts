@@ -16,7 +16,12 @@ async function bootstrap() {
       transform: true // 컨트롤러가 값을 받을 때 컨트롤러에 정의한 타입으로 형 변환 => id로받는값에 타입을 지정한다면 nest에서 자체적으로 타입 변환
     })
   )
-  setUpSession(app);
+
+  app.enableCors({
+    origin: 'http://localhost:3002',
+  });
+
+  // setUpSession(app); // TODO
   
   const configService = app.get(ConfigService);
 
