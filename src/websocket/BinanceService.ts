@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as WebSocket from 'ws';
-import { EventService } from '../sse_events/eventService';
+import { BinanceEventService } from 'src/sse_events/binanceEventService';
 
 @Injectable()
 export class BinanceService {
     private ws : WebSocket;
     
 
-    constructor(private eventService : EventService){
-        // this.connectToBinance();
+    constructor(private binanceEventService : BinanceEventService){
+        this.connectToBinance();
     }
 
     private connectToBinance(){
@@ -27,11 +27,19 @@ export class BinanceService {
          */
         this.ws.on('message', (data) => {
             const message = JSON.parse(data.toString());
-            const stream = message.stream;
+            // console.log(message);
             const trade = message.data
             // console.log(`binance : Stream : ${stream}, Price: ${trade.p}, Quantity: ${trade.q}`);
             
-            this.eventService.sendData(`binance Stream : ${stream}, trade.p : ${trade.p}`);
+            const sendData = {
+                send : 'binance',
+                stream : trade.s,
+                price : trade.p,
+                Quantity : trade.q
+            }
+
+            // console.log(sendData);
+            this.binanceEventService.sendBinanceData(sendData);
         });
 
         this.ws.on('close', () => {

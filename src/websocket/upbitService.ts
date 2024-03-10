@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as WebSocket from 'ws';
 import { EventService } from '../sse_events/eventService';
+import { UpbitEventService } from 'src/sse_events/upbitEventService';
 
 @Injectable()
 export class UpbitService {
     private ws: WebSocket;
 
-    constructor(private eventService : EventService) {
-        // this.connectToUpbit();
+    constructor(private upbitEventService : UpbitEventService) {
+        this.connectToUpbit();
     }
 
     private connectToUpbit() {
@@ -24,8 +25,13 @@ export class UpbitService {
         this.ws.on('message', (data) => {
             const response = JSON.parse(data.toString());
             // console.log(`upbit : Market: ${response.code}, Trade Price: ${response.trade_price}, Trade Volume: ${response.trade_volume}`);
-
-            this.eventService.sendData(`upbit Stream : ${response.code}, trade.p : ${response.trade_price}`)
+            const sendData = {
+                send : 'upbit',
+                stream : response.code,
+                price : response.trade_price,
+                Quantity : response.trade_volume
+            }
+            this.upbitEventService.sendUpbitData(sendData);
         });
 
         this.ws.on('close', () => {
