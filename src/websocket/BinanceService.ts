@@ -12,7 +12,7 @@ export class BinanceService {
     }
 
     private connectToBinance(){
-        const streamNames = ['btcusdt@trade', 'ethusdt@trade'].join('/'); // btc-usdt
+        const streamNames = ['btcusdt@trade', 'ethusdt@trade', 'xrpusdt@trade', 'iqusdt@trade', 'idusdt@trade', 'scusdt@trade', 'zrxusdt@trade', 'pythusdt@trade'].join('/'); // btc-usdt
         const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streamNames}`; // binance 요청 url
         this.ws = new WebSocket(wsUrl);
 
@@ -27,9 +27,7 @@ export class BinanceService {
          */
         this.ws.on('message', (data) => {
             const message = JSON.parse(data.toString());
-            // console.log(message);
             const trade = message.data
-            // console.log(`binance : Stream : ${stream}, Price: ${trade.p}, Quantity: ${trade.q}`);
             
             const sendData = {
                 send : 'binance',
@@ -38,8 +36,7 @@ export class BinanceService {
                 Quantity : trade.q
             }
 
-            // console.log(sendData);
-            this.binanceEventService.sendBinanceData(sendData);
+            this.binanceEventService.sendBinanceData(sendData); // binance data front-end server로 전송
         });
 
         this.ws.on('close', () => {

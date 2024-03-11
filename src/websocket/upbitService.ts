@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as WebSocket from 'ws';
-import { EventService } from '../sse_events/eventService';
 import { UpbitEventService } from 'src/sse_events/upbitEventService';
 
 @Injectable()
@@ -18,13 +17,12 @@ export class UpbitService {
         this.ws.on('open', () => {
             console.log('Connected to Upbit WebSocket');
             // 구독할 시장의 코드
-            const subscribeMessage = JSON.stringify([{ ticket: "test" }, { type: "trade", codes: ["KRW-BTC", "KRW-ETH"] }]);
+            const subscribeMessage = JSON.stringify([{ ticket: "test" }, { type: "trade", codes: ["KRW-BTC", "KRW-ETH", "KRW-XRP", "KRW-IQ", "KRW-ID", "KRW-SC", "KRW-ZRX", "KRW-PYTH"] }]);
             this.ws.send(subscribeMessage);
         });
 
         this.ws.on('message', (data) => {
             const response = JSON.parse(data.toString());
-            // console.log(`upbit : Market: ${response.code}, Trade Price: ${response.trade_price}, Trade Volume: ${response.trade_volume}`);
             const sendData = {
                 send : 'upbit',
                 stream : response.code,
