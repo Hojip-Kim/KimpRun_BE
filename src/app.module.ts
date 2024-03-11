@@ -13,12 +13,15 @@ import { Profile } from './profile/entity/profile';
 import { BoardsEntity } from './community/boards/boards/boards.entity';
 import { BinanceEventService } from './sse_events/binanceEventService';
 import { UpbitEventService } from './sse_events/upbitEventService';
+import { ScheduleModule } from '@nestjs/schedule'
+import { ExportTradePair } from './websocket/tradepair/tradepair';
 
 @Module({
   imports: [
     UserModule, 
     AuthModule,
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,6 +39,6 @@ import { UpbitEventService } from './sse_events/upbitEventService';
     })
   ],
   controllers: [AppController, EventsController],
-  providers: [AppService, BinanceEventService, UpbitEventService, BinanceService, UpbitService],
+  providers: [AppService, BinanceEventService, UpbitEventService, BinanceService, UpbitService, ExportTradePair],
 })
 export class AppModule {}
